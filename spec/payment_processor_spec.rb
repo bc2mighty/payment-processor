@@ -27,8 +27,13 @@ describe PaymentProcessor do
       input = [csv_headers]
 
       subject = PaymentProcessor.process input
+      total_payments = subject[:total_payments]
+      total_dollar_amount_processed = subject[:total_dollar_amount_processed]
+      amount_by_card_type = subject[:amount_by_card_type]
 
-      expect(subject).to eq("Total payments: 0")
+      expect(total_payments).to eq(0)
+      expect(total_dollar_amount_processed).to eq(0.0)
+      expect(amount_by_card_type.keys.size).to eq(0)
     end
 
     it "does not process expired cards" do
