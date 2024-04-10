@@ -29,5 +29,5 @@ class PaymentProcessor
   end
 end
 
-file_path = File.expand_path("./payments.csv", File.dirname(__FILE__))
+file_path = File.expand_path("./inputs.csv", File.dirname(__FILE__))
 puts "Total payments: #{PaymentProcessor.process CSV.read(file_path)}"

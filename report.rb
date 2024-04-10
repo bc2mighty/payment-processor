@@ -26,4 +26,14 @@ class Report
     end
     @amount_by_card_type
   end
+
+  def rename_report_file
+    filename = "#{Dir.getwd}/inputs.csv"
+    new_filename = "#{Dir.getwd}/#{Time.now.strftime("%Y-%m-%d %H:%M")}.csv"
+    FileUtils.cp(filename, new_filename)
+  end
+
+  def cent_to_dollar(amount)
+    amount.to_f / 100
+  end
 end
