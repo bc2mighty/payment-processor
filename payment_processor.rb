@@ -16,12 +16,14 @@ class PaymentProcessor
       processed = processor.process!
       @processed_payments << card if processed
     end
+    report = Report.new(get_processed_payments)
+    report.print
   end
 
   def self.cards_to_try
     @input[1..-1]
   end
-
+  
   def self.get_processed_payments
     @processed_payments
   end
