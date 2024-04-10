@@ -36,4 +36,13 @@ class Report
   def cent_to_dollar(amount)
     amount.to_f / 100
   end
+
+  def print
+    rename_report_file
+    {
+      total_payments: total_payments,
+      total_dollar_amount_processed: total_dollar_amount_processed,
+      amount_by_card_type: get_amount_by_card_type
+    }
+  end
 end
