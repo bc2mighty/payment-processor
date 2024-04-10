@@ -12,8 +12,15 @@ describe PaymentProcessor do
       ]
 
       subject = PaymentProcessor.process input
+      total_payments = subject[:total_payments]
+      total_dollar_amount_processed = subject[:total_dollar_amount_processed]
+      amount_by_card_type = subject[:amount_by_card_type]
 
-      expect(subject).to eq("Total payments: 3")
+      expect(total_payments).to eq(3)
+      expect(total_dollar_amount_processed).to eq(1508.18)
+      expect(amount_by_card_type['American Express']).to eq(873.45)
+      expect(amount_by_card_type['Mastercard']).to eq(113.73)
+      expect(amount_by_card_type['Visa']).to eq(521.0)
     end
 
     it "does nothing if there's only one row (headers)" do
@@ -48,10 +55,10 @@ describe PaymentProcessor do
       expect(subject).to eq("Total payments: 0")
     end
 
-    pending "allows cards to have exactly 15 digits in its number if it is an AmEx card" do
+    pending "allows cards to have exactly 15 digits in its number if it is an American Express card" do
       subject = PaymentProcessor.process([
         csv_headers,
-        "Griffin Byers,520082828282821,818,55068,11/2021,11373,AmEx".split(","),
+        "Griffin Byers,520082828282821,818,55068,11/2021,11373,American Express".split(","),
       ])
 
       expect(subject).to eq("Total payments: 1")
@@ -95,7 +102,7 @@ def valid_card_visa
 end
 
 def valid_card_mastercard
-  "Griffin Byers,5200828282828210,818,55068,11/2021,11373,Mastercard"
+  "Griffin Byers,5200828282828210,818,55068,11/2026,11373,Mastercard"
 end
 
 def valid_card_amex
