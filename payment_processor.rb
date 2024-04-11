@@ -30,4 +30,6 @@ class PaymentProcessor
 end
 
 file_path = File.expand_path("./inputs.csv", File.dirname(__FILE__))
-puts "Total payments: #{PaymentProcessor.process CSV.read(file_path)}"
+if File.exists?(file_path)
+  puts "Total payments: #{PaymentProcessor.process CSV.read(file_path)}"
+end

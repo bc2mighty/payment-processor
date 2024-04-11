@@ -91,6 +91,15 @@ describe PaymentProcessor do
       expect(total_dollar_amount_processed).to eq(0.0)
       expect(amount_by_card_type.keys.size).to eq(0)
     end
+
+    it "renames 'inputs.csv' file after report is completed" do
+      subject = PaymentProcessor.process([
+        csv_headers,
+        "Griffin Byers,520082828282821,818,55068,11/2026,11373,American Express".split(","),
+      ])
+      filename = "#{Dir.getwd}/inputs.csv"
+      expect(File.exists?(filename)).to be false
+    end
   end
 end
 

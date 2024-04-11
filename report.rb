@@ -29,8 +29,10 @@ class Report
 
   def rename_report_file
     filename = "#{Dir.getwd}/inputs.csv"
-    new_filename = "#{Dir.getwd}/#{Time.now.strftime("%Y-%m-%d %H:%M")}.csv"
-    # FileUtils.mv(filename, new_filename)
+    if File.exists?(filename)
+        new_filename = "#{Dir.getwd}/#{Time.now.strftime("%Y-%m-%d %H:%M")}.csv"
+        FileUtils.mv(filename, new_filename)
+    end
   end
 
   def cent_to_dollar(amount)
