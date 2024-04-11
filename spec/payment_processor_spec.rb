@@ -100,6 +100,14 @@ describe PaymentProcessor do
       filename = "#{Dir.getwd}/inputs.csv"
       expect(File.exists?(filename)).to be false
     end
+
+    it "expects array of cards to be sent to report class" do
+      subject = PaymentProcessor.process([
+        wrong_csv_headers,
+        "Griffin Byers,520082828282821,818,55068,11373,American Express".split(","),
+      ])
+      expect(subject).to eq("uncaught throw #<ArgumentError: Invalid Payment Inputs Provided>")
+    end
   end
 end
 
@@ -112,6 +120,17 @@ def csv_headers
     Expiration\ Date
     Amount\ (in\ cents),
     Card\ Type
+  )
+end
+
+def wrong_csv_headers
+  %w(
+    Name
+    Card\ Number
+    CCV
+    Zip\ Code
+    Expiration\ Date
+    Amount\ (in\ cents)
   )
 end
 
