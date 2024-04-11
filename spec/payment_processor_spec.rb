@@ -51,33 +51,46 @@ describe PaymentProcessor do
       expect(amount_by_card_type.to_h.keys.size).to eq(1)
     end
 
-    # pending "rejects cards with greater or fewer than 16 digits in its number" do
-    #   input = [
-    #     csv_headers,
-    #     "Griffin Byers,520082828282821,818,55068,11/2021,11373,Mastercard".split(","), # 15 digits
-    #     "Griffin Byers,52120082828282821,818,55068,11/2021,11373,Mastercard".split(","), # 17 digits
-    #   ]
+    it "rejects cards with greater or fewer than 16 digits in its number" do
+      input = [
+        csv_headers,
+        "Griffin Byers,520082828282821,818,55068,11/2021,11373,Mastercard".split(","), # 15 digits
+        "Griffin Byers,52120082828282821,818,55068,11/2021,11373,Mastercard".split(","), # 17 digits
+      ]
 
-    #   subject = PaymentProcessor.process(input)
+      subject = PaymentProcessor.process(input)
+      total_payments = subject[:total_payments]
+      amount_by_card_type = subject[:amount_by_card_type]
 
-    #   expect(subject).to eq("Total payments: 0")
-    # end
+      expect(total_payments).to eq(0)
+      expect(amount_by_card_type.to_h.keys.size).to eq(0)
+    end
 
-    # pending "allows cards to have exactly 15 digits in its number if it is an American Express card" do
-    #   subject = PaymentProcessor.process([
-    #     csv_headers,
-    #     "Griffin Byers,520082828282821,818,55068,11/2021,11373,American Express".split(","),
-    #   ])
+    it "allows cards to have exactly 15 digits in its number if it is an American Express card" do
+      subject = PaymentProcessor.process([
+        csv_headers,
+        "Griffin Byers,520082828282821,818,55068,11/2026,11373,American Express".split(","),
+      ])
+      total_payments = subject[:total_payments]
+      total_dollar_amount_processed = subject[:total_dollar_amount_processed]
+      amount_by_card_type = subject[:amount_by_card_type]
 
-    #   expect(subject).to eq("Total payments: 1")
+      expect(total_payments).to eq(1)
+      expect(total_dollar_amount_processed).to eq(113.73)
+      expect(amount_by_card_type['American Express']).to eq(113.73)
 
-    #   subject = PaymentProcessor.process([
-    #     csv_headers,
-    #     "Griffin Byers,520082828282821,818,55068,11/2021,11373,Visa".split(","),
-    #   ])
+      subject = PaymentProcessor.process([
+        csv_headers,
+        "Griffin Byers,520082828282821,818,55068,11/2021,11373,Visa".split(","),
+      ])
+      total_payments = subject[:total_payments]
+      total_dollar_amount_processed = subject[:total_dollar_amount_processed]
+      amount_by_card_type = subject[:amount_by_card_type]
 
-    #   expect(subject).to eq("Total payments: 0")
-    # end
+      expect(total_payments).to eq(0)
+      expect(total_dollar_amount_processed).to eq(0.0)
+      expect(amount_by_card_type.keys.size).to eq(0)
+    end
   end
 end
 
