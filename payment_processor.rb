@@ -1,4 +1,5 @@
 require "csv"
+require './log'
 require './card_processor'
 require './report'
 
@@ -12,6 +13,7 @@ class PaymentProcessor
     @processed_payments = []
 
     # Tries each cards with the CardProcessor class
+    Log.info 'Processing cards...'
     cards_to_try.each do |card|
       processor = CardProcessor.new(
         card[1], card[2], card[0], card[4], card[3], card[5], card[6]
@@ -24,8 +26,11 @@ class PaymentProcessor
       @processed_payments << card if processed
     end
 
+    Log.info 'Creating Payment Report...'
     # creates new report and print the processed payment details
     report = Report.new(get_processed_payments)
+
+    Log.info 'Created Payment Report'
     report.print
   rescue StandardError, ArgumentError => e
     e.message
@@ -50,5 +55,8 @@ end
 
 file_path = File.expand_path("./inputs.csv", File.dirname(__FILE__))
 if File.exists?(file_path)
+  Log.info 'Reading inputs.csv file'
   puts "Report: #{PaymentProcessor.process CSV.read(file_path)}"
+else
+  Log.warn "Inputs.csv file missing. Please provide one"
 end
